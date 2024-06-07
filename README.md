@@ -66,8 +66,9 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
-1. npm install
-2. composer install
-3. php artisan migrate
-4. npm run dev
-5. php artisan serve
+1. git clone https://github.com/alvinkarnady/laravel-vue-crud-api-wilayah.git
+2. npm install
+3. composer install
+4. php artisan migrate
+5. npm run dev
+6. php artisan serve
