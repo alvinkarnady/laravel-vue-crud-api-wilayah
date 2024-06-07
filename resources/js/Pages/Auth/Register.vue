@@ -1,0 +1,144 @@
+<script setup>
+import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { reactive, ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+import SelectInput from '@/Components/SelectInput.vue';
+
+const { props } = usePage();
+
+const provinces = ref(props.provinces);
+const kabupatens = ref([]);
+const kecamatans = ref([]);
+
+const form = useForm({
+    name: '',
+    email: '',
+    provinsi: '',
+    kabupaten: '',
+    kecamatan: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const fetchKabupaten = async () => {
+    await fetch(`/users/get-regencies/${form.provinsi.id}`)
+        .then(response => response.json())
+        .then(data => {
+            kabupatens.value = data;
+            kecamatans.value = [];
+        });
+};
+
+const fetchKecamatan = async () => {
+    await fetch(`/users/get-districts/${form.kabupaten.id}`)
+        .then(response => response.json())
+        .then(data => {
+            kecamatans.value = data;
+        });
+};
+
+const submit = () => {
+    // console.log(JSON.stringify(form, null, 2));
+    form.post(route('register'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
+    });
+};
+
+
+</script>
+
+<template>
+    <GuestLayout>
+
+        <Head title="Register" />
+
+        <form @submit.prevent="submit">
+            <div>
+                <InputLabel for="name" value="Name" />
+
+                <TextInput id="name" type="text" class="mt-1 block w-full" v-model="form.name" autofocus
+                    autocomplete="name" />
+
+                <InputError class="mt-2" :message="form.errors.name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="email" value="Email" />
+
+                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email"
+                    autocomplete="username" />
+
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="provinsi" value="Provinsi" />
+
+                <select v-model="form.provinsi" @change="fetchKabupaten"
+                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="" disabled>Select Provinsi</option>
+                    <option v-for="province in provinces" :key="province.id" :value="province">{{ province.name }}
+                    </option>
+                </select>
+                <InputError class="mt-2" :message="form.errors.provinsi" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="kabupaten" value="Kabupaten/Kota" />
+
+                <select v-model="form.kabupaten" @change="fetchKecamatan"
+                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="" disabled>Select Kabupaten</option>
+                    <option v-for="kabupaten in kabupatens" :key="kabupaten.id" :value="kabupaten">{{
+                        kabupaten.name }}</option>
+                </select>
+                <InputError class="mt-2" :message="form.errors.kabupaten" />
+            </div>
+            <div class="mt-4">
+                <InputLabel for="kecamatan" value="Kecamatan" />
+
+                <select v-model="form.kecamatan"
+                    class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    <option value="" disabled>Select Kecamatan</option>
+                    <option v-for="kecamatan in kecamatans" :key="kecamatan.id" :value="kecamatan">{{
+                        kecamatan.name }}</option>
+                </select>
+                <InputError class="mt-2" :message="form.errors.kecamatan" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password" value="Password" />
+
+                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password"
+                    autocomplete="new-password" />
+
+                <InputError class="mt-2" :message="form.errors.password" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="password_confirmation" value="Confirm Password" />
+
+                <TextInput id="password_confirmation" type="password" class="mt-1 block w-full"
+                    v-model="form.password_confirmation" autocomplete="new-password" />
+
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <Link :href="route('login')"
+                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                Already registered?
+                </Link>
+
+                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Register
+                </PrimaryButton>
+            </div>
+        </form>
+    </GuestLayout>
+</template>
