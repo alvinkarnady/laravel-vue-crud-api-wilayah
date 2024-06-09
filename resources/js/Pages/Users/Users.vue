@@ -98,17 +98,17 @@ const formatDate = (date) => {
                                             {{ user.email }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap text-wrap">
                                         <div class="text-sm text-gray-500 dark:text-gray-300">
                                             {{ user.provinsi }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap text-wrap">
                                         <div class="text-sm text-gray-500 dark:text-gray-300">
                                             {{ user.kabupaten }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-2 py-4 whitespace-nowrap text-nowrap">
                                         <div class="text-sm text-gray-500 dark:text-gray-300">
                                             {{ user.kecamatan }}
                                         </div>

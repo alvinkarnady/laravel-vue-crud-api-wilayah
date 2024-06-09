@@ -18,6 +18,7 @@ const provinces = props.provinces;
 const kabupatens = ref(props.kabupatens);
 const kecamatans = ref(props.kecamatans);
 
+
 const form = useForm({
     name: user.name,
     email: user.email,
@@ -27,6 +28,8 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
+
+console.log(form)
 
 const fetchKabupaten = async () => {
     if (form.provinsi) {
@@ -61,13 +64,13 @@ const fetchChangeFormValue = async () => {
     const dataPro = await responsePro.json();
     const dataKab = await responseKab.json();
     const dataKec = await responseKec.json();
-    const provinsi = dataPro.name
+    const provinsi = dataPro
     const kabupaten = dataKab.find(item => item.id === form.kabupaten);
     const kecamatan = dataKec.find(item => item.id === form.kecamatan);
     if (kabupaten && kecamatan && provinsi) {
         form.provinsi = provinsi;
-        form.kabupaten = kabupaten.name;
-        form.kecamatan = kecamatan.name;
+        form.kabupaten = kabupaten;
+        form.kecamatan = kecamatan;
     }
 };
 
@@ -76,6 +79,7 @@ const fetchChangeFormValue = async () => {
 
 const submit = async () => {
 
+    console.log(form)
     await fetchChangeFormValue();
     console.log(form)
 

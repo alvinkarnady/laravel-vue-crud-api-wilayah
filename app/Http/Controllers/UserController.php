@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'DESC')->get();
+        $users = User::orderBy('updated_at', 'DESC')->get();
         return Inertia::render('Users/Users', [
             'users' => $users,
         ]);
@@ -104,6 +104,14 @@ class UserController extends Controller
             'password' => 'confirmed',
         ]);
 
+        $validated['provinsi_id'] = $request->provinsi['id'];
+        $validated['kabupaten_id'] = $request->kabupaten['id'];
+        $validated['kecamatan_id'] = $request->kecamatan['id'];
+
+        $validated['provinsi'] = $request->provinsi['name'];
+        $validated['kabupaten'] = $request->kabupaten['name'];
+        $validated['kecamatan'] = $request->kecamatan['name'];
+
         $user = User::findOrFail($id);
 
         if (!$request->password) {
@@ -111,9 +119,6 @@ class UserController extends Controller
         } else {
             $validated['password'] = Hash::make($request->password);
         }
-
-        // Temukan nama berdasarkan ID yang dikirimkan
-
 
         $user->update($validated);
 

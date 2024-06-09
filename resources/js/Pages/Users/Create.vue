@@ -105,7 +105,7 @@ const submit = () => {
                                     <option value="" disabled>Select Provinsi</option>
                                     <option v-for="province in provinces" :key="province.id" :value="province">{{
                                         province.name
-                                        }}
+                                    }}
                                     </option>
                                 </select>
                                 <InputError class="mt-2" :message="form.errors.provinsi" />
